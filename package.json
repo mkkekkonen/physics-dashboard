@@ -1,0 +1,33 @@
+{
+  "name": "physics-dashboard",
+  "version": "0.0.1",
+  "description": "A physics simulation",
+  "main": "index.jsx",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development webpack-dev-server",
+    "test": "jest"
+  },
+  "author": "Maija Kekkonen",
+  "license": "CC-BY-4.0",
+  "dependencies": {
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "react-konva": "^18.1.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.18.2",
+    "@babel/preset-env": "^7.18.2",
+    "@babel/preset-react": "^7.17.12",
+    "babel-loader": "^8.2.5",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.17.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.30.0",
+    "eslint-plugin-react-hooks": "^4.5.0",
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.9.1"
+  }
+}
