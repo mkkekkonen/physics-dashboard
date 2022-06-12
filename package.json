@@ -10,9 +10,13 @@
   "author": "Maija Kekkonen",
   "license": "CC-BY-4.0",
   "dependencies": {
+    "bootstrap": "^5.1.3",
+    "prop-types": "^15.8.1",
     "react": "^18.1.0",
+    "react-bootstrap": "^2.4.0",
     "react-dom": "^18.1.0",
-    "react-konva": "^18.1.1"
+    "react-konva": "^18.1.1",
+    "styled-components": "^5.3.5"
   },
   "devDependencies": {
     "@babel/core": "^7.18.2",
