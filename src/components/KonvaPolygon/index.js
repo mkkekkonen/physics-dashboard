@@ -1,0 +1,1 @@
+export { KonvaPolygon } from './KonvaPolygon';

@@ -1,7 +1,8 @@
 {
     "env": {
         "browser": true,
-        "es2021": true
+        "es2021": true,
+        "jest": true
     },
     "extends": [
         "plugin:react/recommended",
@@ -20,7 +21,9 @@
     "rules": {
         "arrow-body-style": ["error", "always"],
         "linebreak-style": ["error", "windows"],
+        "no-underscore-dangle": "off",
         "import/prefer-default-export": "off",
-        "react/function-component-definition": "off"
+        "react/function-component-definition": "off",
+        "react/prefer-stateless-function": "off"
     }
 }
