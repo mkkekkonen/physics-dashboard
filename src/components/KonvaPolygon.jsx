@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 import { Line } from 'react-konva';
 
-import * as mathUtils from '../../math/utils';
-import { Polygon } from '../../math';
+import * as mathUtils from '../math/utils';
+import { Polygon } from '../math';
 
 export class KonvaPolygon extends React.Component {
   constructor(props) {
@@ -17,12 +17,12 @@ export class KonvaPolygon extends React.Component {
   }
 
   componentDidMount() {
-    const { width } = this.props;
+    const { stageWidth } = this.props;
 
-    if (width) {
+    if (stageWidth) {
       this.setState({
-        x: mathUtils.randRangeInt(0, width),
-        y: mathUtils.randRangeInt(0, width),
+        x: mathUtils.randRangeInt(0, stageWidth),
+        y: mathUtils.randRangeInt(0, stageWidth),
       });
     }
   }
@@ -50,5 +50,5 @@ export class KonvaPolygon extends React.Component {
 
 KonvaPolygon.propTypes = {
   polygon: PropTypes.instanceOf(Polygon).isRequired,
-  width: PropTypes.number.isRequired,
+  stageWidth: PropTypes.number.isRequired,
 };

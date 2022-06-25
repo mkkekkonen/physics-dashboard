@@ -1,4 +1,4 @@
-import * as mathUtils from '../utils';
+import * as mathUtils from './utils';
 
 export class Vector2 {
   constructor(x, y) {

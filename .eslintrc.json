@@ -20,6 +20,7 @@
     ],
     "rules": {
         "arrow-body-style": ["error", "always"],
+        "default-param-last": "off",
         "linebreak-style": ["error", "windows"],
         "no-underscore-dangle": "off",
         "import/prefer-default-export": "off",

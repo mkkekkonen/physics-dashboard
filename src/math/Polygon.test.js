@@ -1,5 +1,5 @@
 import { Polygon } from './Polygon';
-import { Vector2 } from '../Vector2/Vector2';
+import { Vector2 } from './Vector2';
 
 test('generates correct number of corners', () => {
   for (let corners = 3; corners < 6; corners += 1) {
@@ -14,7 +14,7 @@ test('returns points correctly', () => {
     new Vector2(4, 3),
     new Vector2(5, 1),
   ];
-  const polygon = new Polygon(points);
+  const polygon = new Polygon({ points });
 
   const konvaPoints = [1, 2, 4, 3, 5, 1];
 

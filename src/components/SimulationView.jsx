@@ -1,32 +1,30 @@
 import React, { useState, useMemo } from 'react';
 import Measure from 'react-measure';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 
 import { Layer, Stage } from 'react-konva';
 
-import { KonvaPolygon } from '../KonvaPolygon';
+import { KonvaPolygon } from './KonvaPolygon';
 
-import { Polygon } from '../../math';
-import * as mathUtils from '../../math/utils';
+import { Polygon } from '../math';
+import * as mathUtils from '../math/utils';
+
+import { getPolygonJson } from '../selectors/polygons';
 
 const PaddedContainer = styled.div`
   background-color: #ddd;
   margin: 3rem;
 `;
 
-const generateRandomPolygon = () => {
-  return Polygon.generateRandom(
-    mathUtils.randRangeInt(3, 6 + 1),
-  );
-};
-
 export const SimulationView = ({ ...props }) => {
   const [width, setWidth] = useState(-1);
 
-  const [poly1, setPoly1] = useState(generateRandomPolygon());
-  const [poly2, setPoly2] = useState(generateRandomPolygon());
-
-  const polygons = [poly1, poly2];
+  const polyJson = useSelector(getPolygonJson);
+  const polygons = polyJson.map((jsonStr) => {
+    const json = JSON.parse(jsonStr);
+    return Polygon.parseFromJson(json);
+  });
 
   return (
     <PaddedContainer>
@@ -45,7 +43,7 @@ export const SimulationView = ({ ...props }) => {
                     return (
                       <KonvaPolygon
                         polygon={polygon}
-                        width={width}
+                        stageWidth={width}
                       />
                     );
                   })}

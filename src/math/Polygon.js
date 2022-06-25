@@ -1,9 +1,13 @@
-import * as mathUtils from '../utils';
-import { Vector2 } from '../Vector2';
+import * as mathUtils from './utils';
+import { Vector2 } from './Vector2';
 
 export class Polygon {
-  constructor(points) {
-    this.points = points;
+  constructor({ points, json }) {
+    if (json) {
+      Object.assign(this, json);
+    } else if (points) {
+      this.points = points;
+    }
   }
 
   static generateRandom = (nCorners) => {
@@ -24,7 +28,11 @@ export class Polygon {
       next += step;
     }
 
-    return new Polygon(points);
+    return new Polygon({ points });
+  };
+
+  static parseFromJson = (json) => {
+    return new Polygon({ json });
   };
 
   getKonvaPoints = () => {
