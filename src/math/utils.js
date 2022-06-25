@@ -15,3 +15,14 @@ export const randRangeInt = (min, max) => {
   const _max = Math.floor(max);
   return Math.floor((Math.random() * (_max - _min)) + _min);
 };
+
+export const clampFloat = (n, min, max) => {
+  if (n < min) {
+    return min;
+  }
+  if (n > max) {
+    return max;
+  }
+
+  return n;
+};

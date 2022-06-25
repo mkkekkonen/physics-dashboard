@@ -10,7 +10,7 @@ import { KonvaPolygon } from './KonvaPolygon';
 import { Polygon } from '../math';
 import * as mathUtils from '../math/utils';
 
-import { getPolygonJson } from '../selectors/polygons';
+import { getPolygonList } from '../selectors/polygons';
 
 const PaddedContainer = styled.div`
   background-color: #ddd;
@@ -20,10 +20,10 @@ const PaddedContainer = styled.div`
 export const SimulationView = ({ ...props }) => {
   const [width, setWidth] = useState(-1);
 
-  const polyJson = useSelector(getPolygonJson);
-  const polygons = polyJson.map((jsonStr) => {
-    const json = JSON.parse(jsonStr);
-    return Polygon.parseFromJson(json);
+  const polygonList = useSelector(getPolygonList);
+  const polygons = polygonList.map((polygon) => {
+    const json = JSON.parse(polygon.get('polygon'));
+    return polygon.set('polygon', Polygon.parseFromJson(json));
   });
 
   return (
@@ -42,7 +42,8 @@ export const SimulationView = ({ ...props }) => {
                   {polygons.map((polygon) => {
                     return (
                       <KonvaPolygon
-                        polygon={polygon}
+                        key={polygon.get('id')}
+                        polygon={polygon.get('polygon')}
                         stageWidth={width}
                       />
                     );
