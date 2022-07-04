@@ -1,29 +1,32 @@
-import React, { useState, useMemo } from 'react';
+import React from 'react';
 import Measure from 'react-measure';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { Layer, Stage } from 'react-konva';
 
 import { KonvaPolygon } from './KonvaPolygon';
 
 import { Polygon } from '../math';
-import * as mathUtils from '../math/utils';
+
+import { setStageBounds } from '../actions/simulation';
 
 import { getPolygonList } from '../selectors/polygons';
+import { getStageBounds } from '../selectors/simulation';
 
 const PaddedContainer = styled.div`
   background-color: #ddd;
-  margin: 3rem;
+  margin: 30px;
 `;
 
 export const SimulationView = ({ ...props }) => {
-  const [width, setWidth] = useState(-1);
+  const dispatch = useDispatch();
+  const { width, height } = useSelector(getStageBounds);
 
   const polygonList = useSelector(getPolygonList);
   const polygons = polygonList.map((polygon) => {
-    const json = JSON.parse(polygon.get('polygon'));
-    return polygon.set('polygon', Polygon.parseFromJson(json));
+    const _polygon = polygon.get('polygon');
+    return polygon.set('polygon', _polygon);
   });
 
   return (
@@ -31,7 +34,8 @@ export const SimulationView = ({ ...props }) => {
       <Measure
         bounds
         onResize={(rect) => {
-          setWidth(rect.bounds.width);
+          const _width = rect.bounds.width;
+          dispatch(setStageBounds(_width, _width));
         }}
       >
         {({ measureRef }) => {

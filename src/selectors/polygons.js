@@ -8,19 +8,6 @@ export const getPolygons = (state) => {
 export const getPolygonList = createSelector(
   getPolygons,
   (polygons) => {
-    return Immutable.fromJS([
-      polygons.get('poly1'),
-      polygons.get('poly2'),
-    ]);
-  },
-);
-
-export const getPolygonJson = createSelector(
-  getPolygons,
-  (polygons) => {
-    return [
-      polygons.getIn(['poly1', 'polygon']),
-      polygons.getIn(['poly2', 'polygon']),
-    ];
+    return polygons.get('polygons');
   },
 );

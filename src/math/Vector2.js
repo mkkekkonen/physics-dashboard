@@ -36,6 +36,18 @@ export class Vector2 {
     return Vector2.polarCoordinates(radians, length);
   };
 
+  static generateRandomFromCoords = (
+    rangeXStart = 0,
+    rangeXEnd = 1000,
+    rangeYStart = 0,
+    rangeYEnd = 1000,
+  ) => {
+    const x = mathUtils.randRangeFloat(rangeXStart, rangeXEnd);
+    const y = mathUtils.randRangeFloat(rangeYStart, rangeYEnd);
+
+    return new Vector2({ x, y });
+  };
+
   static parseFromJson = (json) => {
     return new Vector2({ json });
   };
