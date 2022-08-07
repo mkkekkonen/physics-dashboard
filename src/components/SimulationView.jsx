@@ -1,13 +1,13 @@
 import React from 'react';
 import Measure from 'react-measure';
 import styled from 'styled-components';
-import { useSelector, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import { Layer, Stage } from 'react-konva';
+import Immutable from 'immutable';
 
 import { KonvaPolygon } from './KonvaPolygon';
-
-import { Polygon } from '../math';
 
 import { setStageBounds } from '../actions/simulation';
 
@@ -19,45 +19,81 @@ const PaddedContainer = styled.div`
   margin: 30px;
 `;
 
-export const SimulationView = ({ ...props }) => {
-  const dispatch = useDispatch();
-  const { width, height } = useSelector(getStageBounds);
+class SimulationViewCls extends React.Component {
+  render() {
+    const {
+      bounds,
+      polygons,
+      setStageBounds,
+    } = this.props;
+    const { width, height } = bounds;
 
-  const polygonList = useSelector(getPolygonList);
-  const polygons = polygonList.map((polygon) => {
-    const _polygon = polygon.get('polygon');
-    return polygon.set('polygon', _polygon);
-  });
+    return (
+      <PaddedContainer>
+        <Measure
+          bounds
+          onResize={(rect) => {
+            const _width = rect.bounds.width;
+            if (_width !== width) {
+              setStageBounds(_width, _width);
+            }
+          }}
+        >
+          {({ measureRef }) => {
+            return (
+              <div ref={measureRef}>
+                <Stage width={width} height={height}>
+                  <Layer>
+                    {polygons.map((polygon) => {
+                      return (
+                        <KonvaPolygon
+                          key={polygon.get('id')}
+                          polygon={polygon.get('polygon')}
+                          stageWidth={width}
+                        />
+                      );
+                    })}
+                  </Layer>
+                </Stage>
+              </div>
+            );
+          }}
+        </Measure>
+      </PaddedContainer>
+    );
+  }
+}
 
-  return (
-    <PaddedContainer>
-      <Measure
-        bounds
-        onResize={(rect) => {
-          const _width = rect.bounds.width;
-          dispatch(setStageBounds(_width, _width));
-        }}
-      >
-        {({ measureRef }) => {
-          return (
-            <div ref={measureRef}>
-              <Stage width={width} height={width}>
-                <Layer>
-                  {polygons.map((polygon) => {
-                    return (
-                      <KonvaPolygon
-                        key={polygon.get('id')}
-                        polygon={polygon.get('polygon')}
-                        stageWidth={width}
-                      />
-                    );
-                  })}
-                </Layer>
-              </Stage>
-            </div>
-          );
-        }}
-      </Measure>
-    </PaddedContainer>
-  );
+SimulationViewCls.propTypes = {
+  bounds: PropTypes.shape({
+    width: PropTypes.number,
+    height: PropTypes.number,
+  }),
+  polygons: PropTypes.instanceOf(Immutable.List),
+  setStageBounds: PropTypes.func.isRequired,
 };
+
+SimulationViewCls.defaultProps = {
+  bounds: {
+    width: 0,
+    height: 0,
+  },
+  polygons: Immutable.List(),
+};
+
+const mapStateToProps = (state) => {
+  return {
+    bounds: getStageBounds(state),
+    polygons: getPolygonList(state),
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setStageBounds: (width, height) => {
+      return dispatch(setStageBounds(width, height));
+    },
+  };
+};
+
+export const SimulationView = connect(mapStateToProps, mapDispatchToProps)(SimulationViewCls);
