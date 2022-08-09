@@ -1,10 +1,12 @@
-import { put, takeEvery, all } from 'redux-saga/effects';
+import { put, takeEvery, all, select } from 'redux-saga/effects';
 import Immutable from 'immutable';
 
 import { Vector2 } from '../math';
 
 import { SET_STAGE_BOUNDS } from '../actions/simulation';
-import { savePolygons } from '../actions/polygons';
+import { savePolygons, UPDATE_POLYGONS } from '../actions/polygons';
+
+import { getPolygonList } from '../selectors/polygons';
 
 import { generateRandomPolygon, generateRandomVector } from '../utils/randomJson';
 
@@ -12,7 +14,7 @@ const getPolygonInitialState = (id, position) => {
   return Immutable.fromJS({
     id,
     polygon: generateRandomPolygon(),
-    velocity: generateRandomVector(),
+    velocity: generateRandomVector(75, 150),
     position,
   });
 };
@@ -45,8 +47,28 @@ export function* generatePolygons(action) {
   yield put(savePolygons(polygons));
 }
 
+export function* updatePolygons(action) {
+  const { payload: { deltaTime } } = action;
+  const deltaSeconds = deltaTime / 3600;
+
+  let polygons = yield select(getPolygonList);
+
+  for (let i = 0; i < polygons.size; i += 1) {
+    const polygon = polygons.get(i);
+    const positionDelta = polygon.get('velocity').multiplyScalar(deltaSeconds);
+    const newPosition = polygon.get('position').addVector(positionDelta);
+    polygons = polygons.setIn([i, 'position'], newPosition);
+    if (i === 0) {
+      console.log(newPosition);
+    }
+  }
+
+  yield put(savePolygons(polygons));
+}
+
 export function* watch() {
   yield takeEvery(SET_STAGE_BOUNDS, generatePolygons);
+  yield takeEvery(UPDATE_POLYGONS, updatePolygons);
 }
 
 export default function* rootSaga() {

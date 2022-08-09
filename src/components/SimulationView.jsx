@@ -10,6 +10,7 @@ import Immutable from 'immutable';
 import { KonvaPolygon } from './KonvaPolygon';
 
 import { setStageBounds } from '../actions/simulation';
+import { updatePolygons } from '../actions/polygons';
 
 import { getPolygonList } from '../selectors/polygons';
 import { getStageBounds } from '../selectors/simulation';
@@ -19,7 +20,30 @@ const PaddedContainer = styled.div`
   margin: 30px;
 `;
 
+const FRAME_LENGTH = 1000 / 60;
+
 class SimulationViewCls extends React.Component {
+  constructor(props) {
+    super(props);
+    this.lastTime = 0;
+  }
+
+  componentDidMount() {
+    requestAnimationFrame(this.animateFrame);
+  }
+
+  animateFrame = (now) => {
+    const { updatePolygons } = this.props;
+
+    const delta = now - this.lastTime;
+    if (delta >= FRAME_LENGTH) {
+      updatePolygons(delta);
+      this.lastTime = now;
+    }
+
+    requestAnimationFrame(this.animateFrame);
+  };
+
   render() {
     const {
       bounds,
@@ -49,6 +73,7 @@ class SimulationViewCls extends React.Component {
                         <KonvaPolygon
                           key={polygon.get('id')}
                           polygon={polygon.get('polygon')}
+                          position={polygon.get('position')}
                           stageWidth={width}
                         />
                       );
@@ -71,6 +96,7 @@ SimulationViewCls.propTypes = {
   }),
   polygons: PropTypes.instanceOf(Immutable.List),
   setStageBounds: PropTypes.func.isRequired,
+  updatePolygons: PropTypes.func.isRequired,
 };
 
 SimulationViewCls.defaultProps = {
@@ -92,6 +118,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setStageBounds: (width, height) => {
       return dispatch(setStageBounds(width, height));
+    },
+    updatePolygons: (delta) => {
+      return dispatch(updatePolygons(delta));
     },
   };
 };

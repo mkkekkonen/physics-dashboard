@@ -11,9 +11,9 @@ export const generateRandomPolygon = () => {
   );
 };
 
-export const generateRandomVector = () => {
+export const generateRandomVector = (rangeLengthStart = 1, rangeLengthEnd = 5) => {
   return Immutable.fromJS(
-    Vector2.generateRandom(),
+    Vector2.generateRandom(rangeLengthStart, rangeLengthEnd),
   );
 };
 

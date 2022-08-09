@@ -10,10 +10,24 @@ export class Vector2 {
     }
   }
 
+  addVector = (vector) => {
+    return new Vector2({
+      x: this.x + vector.x,
+      y: this.y + vector.y,
+    });
+  };
+
   multiplyScalar = (scalar) => {
     return new Vector2({
       x: this.x * scalar,
       y: this.y * scalar,
+    });
+  };
+
+  multiplyVector = (vector) => {
+    return new Vector2({
+      x: this.x * vector.x,
+      y: this.y * vector.y,
     });
   };
 
