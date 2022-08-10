@@ -2,11 +2,12 @@ import * as mathUtils from './utils';
 import { Vector2 } from './Vector2';
 
 export class Polygon {
-  constructor({ points, json }) {
+  constructor({ points, radius, json }) {
     if (json) {
       Object.assign(this, json);
     } else if (points) {
       this.points = points;
+      this.radius = radius;
     }
   }
 

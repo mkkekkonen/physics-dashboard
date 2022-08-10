@@ -2,6 +2,7 @@ import Immutable from 'immutable';
 
 import { SAVE_POLYGONS } from '../actions/polygons';
 
+// see sagas/index.js for polygon initial state
 const initialState = Immutable.fromJS({
   polygons: [],
 });

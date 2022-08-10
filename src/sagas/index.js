@@ -9,21 +9,32 @@ import { savePolygons, UPDATE_POLYGONS } from '../actions/polygons';
 import { getPolygonList } from '../selectors/polygons';
 
 import { generateRandomPolygon, generateRandomVector } from '../utils/randomJson';
+import * as mathUtils from '../math/utils';
+
+const CIRCLE_RADIANS = 2 * Math.PI;
+const OMEGA_RANGE_PERCENTAGE = 0.06;
+const OMEGA_RANGE_ABS = CIRCLE_RADIANS * OMEGA_RANGE_PERCENTAGE;
 
 const getPolygonInitialState = (id, position) => {
+  const polygon = generateRandomPolygon();
+
   return Immutable.fromJS({
     id,
-    polygon: generateRandomPolygon(),
-    velocity: generateRandomVector(75, 150),
+    polygon,
+    radius: polygon.radius,
     position,
+    rotation: 0,
+    velocity: generateRandomVector(75, 150), // magnitude: speed per second
+    angularVelocity:
+      mathUtils.randRangeFloat(-OMEGA_RANGE_ABS, OMEGA_RANGE_ABS), // radians per second
   });
 };
 
 export function* generatePolygons(action) {
   const { width, height } = action.payload;
 
-  const poly1XRange = [0, width / 2];
-  const poly2XRange = [width / 2, width];
+  const poly1XRange = [50, width / 2];
+  const poly2XRange = [width / 2, width - 50];
 
   const poly1Position = Vector2.generateRandomFromCoords(
     poly1XRange[0],
@@ -55,12 +66,14 @@ export function* updatePolygons(action) {
 
   for (let i = 0; i < polygons.size; i += 1) {
     const polygon = polygons.get(i);
+
     const positionDelta = polygon.get('velocity').multiplyScalar(deltaSeconds);
     const newPosition = polygon.get('position').addVector(positionDelta);
     polygons = polygons.setIn([i, 'position'], newPosition);
-    if (i === 0) {
-      console.log(newPosition);
-    }
+
+    const rotationDelta = polygon.get('angularVelocity') * deltaSeconds;
+    const newRotation = polygon.get('rotation') + rotationDelta;
+    polygons = polygons.setIn([i, 'rotation'], newRotation);
   }
 
   yield put(savePolygons(polygons));

@@ -73,7 +73,9 @@ class SimulationViewCls extends React.Component {
                         <KonvaPolygon
                           key={polygon.get('id')}
                           polygon={polygon.get('polygon')}
+                          radius={polygon.get('radius')}
                           position={polygon.get('position')}
+                          rotation={polygon.get('rotation')}
                           stageWidth={width}
                         />
                       );
