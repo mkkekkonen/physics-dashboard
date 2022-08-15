@@ -1,5 +1,7 @@
 import * as mathUtils from './utils';
 
+const EPSILON = 0.01;
+
 export class Vector2 {
   constructor({ x, y, json }) {
     if (json) {
@@ -29,6 +31,28 @@ export class Vector2 {
       x: this.x * vector.x,
       y: this.y * vector.y,
     });
+  };
+
+  distanceTo = (vector) => {
+    return Math.sqrt(((this.x - vector.x) ** 2) + ((this.y - vector.y) ** 2));
+  };
+
+  invertY = (worldHeight) => {
+    return new Vector2({ x: this.x, y: worldHeight - this.y });
+  };
+
+  isBetween = (vector1, vector2) => {
+    const distanceWithMidpoint = this.distanceTo(vector1) + this.distanceTo(vector2);
+    const distanceWithoutMidpoint = vector1.distanceTo(vector2);
+
+    const difference = distanceWithMidpoint - distanceWithoutMidpoint;
+
+    // handle precision errors
+    if (difference < EPSILON && difference > -EPSILON) {
+      return true;
+    }
+
+    return false;
   };
 
   static polarCoordinates = (angleRadians, radius = 1) => {

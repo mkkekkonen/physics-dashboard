@@ -50,7 +50,7 @@ class SimulationViewCls extends React.Component {
       polygons,
       setStageBounds,
     } = this.props;
-    const { width, height } = bounds;
+    const { width, height } = bounds.toJS();
 
     return (
       <PaddedContainer>
@@ -77,6 +77,7 @@ class SimulationViewCls extends React.Component {
                           position={polygon.get('position')}
                           rotation={polygon.get('rotation')}
                           stageWidth={width}
+                          stageHeight={height}
                         />
                       );
                     })}
@@ -92,10 +93,7 @@ class SimulationViewCls extends React.Component {
 }
 
 SimulationViewCls.propTypes = {
-  bounds: PropTypes.shape({
-    width: PropTypes.number,
-    height: PropTypes.number,
-  }),
+  bounds: PropTypes.instanceOf(Immutable.Map),
   polygons: PropTypes.instanceOf(Immutable.List),
   setStageBounds: PropTypes.func.isRequired,
   updatePolygons: PropTypes.func.isRequired,

@@ -1,5 +1,8 @@
+import Immutable from 'immutable';
+
 import * as mathUtils from './utils';
 import { Vector2 } from './Vector2';
+import { Line } from './Line';
 
 export class Polygon {
   constructor({ points, radius, json }) {
@@ -29,7 +32,7 @@ export class Polygon {
       next += step;
     }
 
-    return new Polygon({ points });
+    return new Polygon({ points, radius });
   };
 
   static parseFromJson = (json) => {
@@ -42,5 +45,17 @@ export class Polygon {
         return [point.x, point.y];
       })
       .flat();
+  };
+
+  getLines = () => {
+    return Immutable.fromJS(
+      this.points.map((point, i) => {
+        const nextIndex = i < (this.points.length - 1)
+          ? (i + 1)
+          : 0;
+
+        return new Line(point, this.points[nextIndex]);
+      }),
+    );
   };
 }

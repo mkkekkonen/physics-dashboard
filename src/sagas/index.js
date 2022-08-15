@@ -7,6 +7,7 @@ import { SET_STAGE_BOUNDS } from '../actions/simulation';
 import { savePolygons, UPDATE_POLYGONS } from '../actions/polygons';
 
 import { getPolygonList } from '../selectors/polygons';
+import { getStageBounds } from '../selectors/simulation';
 
 import { generateRandomPolygon, generateRandomVector } from '../utils/randomJson';
 import * as mathUtils from '../math/utils';
@@ -15,10 +16,10 @@ const CIRCLE_RADIANS = 2 * Math.PI;
 const OMEGA_RANGE_PERCENTAGE = 0.06;
 const OMEGA_RANGE_ABS = CIRCLE_RADIANS * OMEGA_RANGE_PERCENTAGE;
 
-const MIN_POSITION_X = 50;
+const MIN_POSITION_X = 100;
 let MAX_POSITION_X;
 
-const MIN_POSITION_Y = 50;
+const MIN_POSITION_Y = 100;
 let MAX_POSITION_Y;
 
 const getPolygonInitialState = (id, position) => {
@@ -39,8 +40,8 @@ const getPolygonInitialState = (id, position) => {
 export function* generatePolygons(action) {
   const { width, height } = action.payload;
 
-  MAX_POSITION_X = width - 50;
-  MAX_POSITION_Y = height - 50;
+  MAX_POSITION_X = width - 100;
+  MAX_POSITION_Y = height - 100;
 
   const poly1XRange = [MIN_POSITION_X, width / 2];
   const poly2XRange = [width / 2, MAX_POSITION_X];
@@ -59,8 +60,8 @@ export function* generatePolygons(action) {
     height,
   );
 
-  const poly1 = getPolygonInitialState(1, poly1Position);
-  const poly2 = getPolygonInitialState(2, poly2Position);
+  const poly1 = getPolygonInitialState(1, poly1Position.invertY(540));
+  const poly2 = getPolygonInitialState(2, poly2Position.invertY(540));
 
   const polygons = Immutable.fromJS([poly1, poly2]);
 
@@ -72,6 +73,7 @@ export function* updatePolygons(action) {
   const deltaSeconds = deltaTime / 3600;
 
   let polygons = yield select(getPolygonList);
+  const stageBounds = yield select(getStageBounds);
 
   for (let i = 0; i < polygons.size; i += 1) {
     const polygon = polygons.get(i);
@@ -84,22 +86,22 @@ export function* updatePolygons(action) {
     const newRotation = polygon.get('rotation') + rotationDelta;
     polygons = polygons.setIn([i, 'rotation'], newRotation);
 
-    if (newPosition.x < MIN_POSITION_X
-      || (MAX_POSITION_X && newPosition.x > MAX_POSITION_X)
+    const invertedPosition = newPosition.invertY(stageBounds.get('height'));
+
+    if (invertedPosition.x < MIN_POSITION_X
+      || (MAX_POSITION_X && invertedPosition.x > MAX_POSITION_X)
     ) {
       const multiplier = new Vector2({ x: -1, y: 1 }); // invert X component
       const newVelocity = polygon.get('velocity').multiplyVector(multiplier);
       polygons = polygons.setIn([i, 'velocity'], newVelocity);
-      console.log(newVelocity);
     }
 
-    if (newPosition.y < MIN_POSITION_Y
-      || (MAX_POSITION_Y && newPosition.y > MAX_POSITION_Y)
+    if (invertedPosition.y < MIN_POSITION_Y
+      || (MAX_POSITION_Y && invertedPosition.y > MAX_POSITION_Y)
     ) {
       const multiplier = new Vector2({ x: 1, y: -1 }); // invert Y component
       const newVelocity = polygon.get('velocity').multiplyVector(multiplier);
       polygons = polygons.setIn([i, 'velocity'], newVelocity);
-      console.log(newVelocity);
     }
   }
 
