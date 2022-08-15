@@ -55,6 +55,13 @@ export class Vector2 {
     return false;
   };
 
+  rotate = (angleRadians) => {
+    return new Vector2({
+      x: (this.x * Math.cos(angleRadians)) - (this.y * Math.sin(angleRadians)),
+      y: (this.x * Math.sin(angleRadians)) + (this.y * Math.cos(angleRadians)),
+    });
+  };
+
   static polarCoordinates = (angleRadians, radius = 1) => {
     return new Vector2({
       x: radius * Math.cos(angleRadians),

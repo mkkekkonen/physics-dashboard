@@ -13,7 +13,7 @@ import { generateRandomPolygon, generateRandomVector } from '../utils/randomJson
 import * as mathUtils from '../math/utils';
 
 const CIRCLE_RADIANS = 2 * Math.PI;
-const OMEGA_RANGE_PERCENTAGE = 0.06;
+const OMEGA_RANGE_PERCENTAGE = 0.15;
 const OMEGA_RANGE_ABS = CIRCLE_RADIANS * OMEGA_RANGE_PERCENTAGE;
 
 const MIN_POSITION_X = 100;
@@ -85,6 +85,8 @@ export function* updatePolygons(action) {
     const rotationDelta = polygon.get('angularVelocity') * deltaSeconds;
     const newRotation = polygon.get('rotation') + rotationDelta;
     polygons = polygons.setIn([i, 'rotation'], newRotation);
+
+    polygon.get('polygon').rotate(rotationDelta);
 
     const invertedPosition = newPosition.invertY(stageBounds.get('height'));
 

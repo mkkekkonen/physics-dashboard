@@ -10,17 +10,13 @@ export class KonvaPolygon extends React.Component {
   render() {
     const {
       polygon,
-      radius,
       position,
-      rotation,
     } = this.props;
     const { x, y } = position;
 
     if (!x && !y) {
       return null;
     }
-
-    const rotationDegrees = mathUtils.radiansToDegrees(rotation);
 
     return (
       <Line
@@ -29,8 +25,6 @@ export class KonvaPolygon extends React.Component {
         strokeWidth={2}
         x={x}
         y={y}
-        offset={{ x: radius, y: radius }}
-        rotation={rotationDegrees}
         closed
       />
     );
@@ -39,7 +33,5 @@ export class KonvaPolygon extends React.Component {
 
 KonvaPolygon.propTypes = {
   polygon: PropTypes.instanceOf(Polygon).isRequired,
-  radius: PropTypes.number.isRequired,
   position: PropTypes.instanceOf(Vector2).isRequired,
-  rotation: PropTypes.number.isRequired,
 };

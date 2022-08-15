@@ -14,6 +14,32 @@ export class Polygon {
     }
   }
 
+  getKonvaPoints = () => {
+    return this.points
+      .map((point) => {
+        return [point.x, point.y];
+      })
+      .flat();
+  };
+
+  getLines = () => {
+    return Immutable.fromJS(
+      this.points.map((point, i) => {
+        const nextIndex = i < (this.points.length - 1)
+          ? (i + 1)
+          : 0;
+
+        return new Line(point, this.points[nextIndex]);
+      }),
+    );
+  };
+
+  rotate = (angleRadians) => {
+    this.points = this.points.map((point) => {
+      return point.rotate(angleRadians);
+    });
+  };
+
   static generateRandom = (nCorners) => {
     const step = (2 * Math.PI) / nCorners;
     const radius = mathUtils.randRangeInt(50, 100);
@@ -37,25 +63,5 @@ export class Polygon {
 
   static parseFromJson = (json) => {
     return new Polygon({ json });
-  };
-
-  getKonvaPoints = () => {
-    return this.points
-      .map((point) => {
-        return [point.x, point.y];
-      })
-      .flat();
-  };
-
-  getLines = () => {
-    return Immutable.fromJS(
-      this.points.map((point, i) => {
-        const nextIndex = i < (this.points.length - 1)
-          ? (i + 1)
-          : 0;
-
-        return new Line(point, this.points[nextIndex]);
-      }),
-    );
   };
 }
