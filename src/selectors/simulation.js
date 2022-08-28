@@ -20,7 +20,7 @@ export const getStageBounds = createSelector(
 export const getStageBorderingLines = createSelector(
   getStageBounds,
   (bounds) => {
-    const { width, height } = bounds;
+    const { width, height } = bounds.toJS();
 
     const topLine = Line.fromPoints(
       new Vector2({ x: 0, y: 0 }),

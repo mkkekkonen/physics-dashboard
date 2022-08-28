@@ -1,3 +1,5 @@
+import * as constants from '../constants';
+
 export const degreesToRadians = (degrees) => {
   return (degrees * Math.PI) / 180;
 };
@@ -25,4 +27,12 @@ export const clampFloat = (n, min, max) => {
   }
 
   return n;
+};
+
+export const approximately = (n, value) => {
+  if (n >= (value - constants.EPSILON) && n <= (value + constants.EPSILON)) {
+    return true;
+  }
+
+  return false;
 };

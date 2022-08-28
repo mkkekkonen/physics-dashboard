@@ -1,15 +1,9 @@
 import * as mathUtils from './utils';
 
-const EPSILON = 0.01;
-
 export class Vector2 {
-  constructor({ x, y, json }) {
-    if (json) {
-      Object.assign(this.json);
-    } else {
-      this.x = x;
-      this.y = y;
-    }
+  constructor({ x, y }) {
+    this.x = x;
+    this.y = y;
   }
 
   addVector = (vector) => {
@@ -47,8 +41,7 @@ export class Vector2 {
 
     const difference = distanceWithMidpoint - distanceWithoutMidpoint;
 
-    // handle precision errors
-    if (difference < EPSILON && difference > -EPSILON) {
+    if (mathUtils.approximately(difference, 0)) {
       return true;
     }
 
@@ -60,6 +53,10 @@ export class Vector2 {
       x: (this.x * Math.cos(angleRadians)) - (this.y * Math.sin(angleRadians)),
       y: (this.x * Math.sin(angleRadians)) + (this.y * Math.cos(angleRadians)),
     });
+  };
+
+  testableObj = () => {
+    return { x: this.x, y: this.y };
   };
 
   static polarCoordinates = (angleRadians, radius = 1) => {
@@ -91,9 +88,5 @@ export class Vector2 {
     const y = mathUtils.randRangeFloat(rangeYStart, rangeYEnd);
 
     return new Vector2({ x, y });
-  };
-
-  static parseFromJson = (json) => {
-    return new Vector2({ json });
   };
 }

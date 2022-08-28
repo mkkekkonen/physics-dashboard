@@ -10,9 +10,9 @@ test('generates correct number of corners', () => {
 
 test('returns points correctly', () => {
   const points = [
-    new Vector2(1, 2),
-    new Vector2(4, 3),
-    new Vector2(5, 1),
+    new Vector2({ x: 1, y: 2 }),
+    new Vector2({ x: 4, y: 3 }),
+    new Vector2({ x: 5, y: 1 }),
   ];
   const polygon = new Polygon({ points });
 
