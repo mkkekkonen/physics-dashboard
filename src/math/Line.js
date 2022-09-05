@@ -1,42 +1,45 @@
 import { Vector2 } from './Vector2';
+import * as mathUtils from './utils';
 
 export class Line {
   constructor({
-    slope,
-    yIntercept,
     point1,
     point2,
   }) {
-    this.slope = slope;
-    this.yIntercept = yIntercept;
     this.point1 = point1;
     this.point2 = point2;
   }
 
-  static fromPoints = (point1, point2) => {
-    const slope = (point1.y - point2.y) / (point1.x - point2.x);
+  get slope() {
+    if (this.point1 && this.point2) {
+      const denominator = (this.point1.x - this.point2.x);
+      if (denominator !== 0) {
+        return (this.point1.y - this.point2.y) / denominator;
+      }
+    }
 
+    // vertical line
+    return Number.NaN;
+  }
+
+  get yIntercept() {
     // calculate the Y intercept by assigning the coordinates of the
     // first point to the variables of the slope-intercept equation
     // (y = ax + b)
-    const yIntercept = point1.y - (slope * point1.x);
-
-    return new Line({
-      slope,
-      yIntercept,
-      point1,
-      point2,
-    });
-  };
+    return this.point1.y - (this.slope * this.point1.x);
+  }
 
   calculateIntersection = (otherLine) => {
+    const sameSlopes = mathUtils.approximately(this.slope, otherLine.slope);
+    const sameYIntercepts = mathUtils.approximately(this.yIntercept, otherLine.yIntercept);
+
     // check if the lines are equal:
-    if (this.slope === otherLine.slope && this.yIntercept === otherLine.yIntercept) {
+    if (sameSlopes && sameYIntercepts) {
       return true;
     }
 
     // check if the lines are parallel:
-    if (this.slope === otherLine.slope && this.yIntercept !== otherLine.yIntercept) {
+    if (sameSlopes && !sameYIntercepts) {
       return false;
     }
 
