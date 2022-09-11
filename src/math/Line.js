@@ -107,12 +107,16 @@ export class Line {
       return false;
     }
 
-    // equal - check if segments overlap
-    if (intersection === true
-        && (this.point1.isBetween(otherLine.point1, otherLine.point2)
-          || this.point2.isBetween(otherLine.point1, otherLine.point2))
-    ) {
+    const equalLines = intersection === true;
+    const overlappingSegments = this.point1.isBetween(otherLine.point1, otherLine.point2)
+      || this.point2.isBetween(otherLine.point1, otherLine.point2);
+
+    if (equalLines && overlappingSegments) {
       return true;
+    }
+
+    if (equalLines && !overlappingSegments) {
+      return false;
     }
 
     // check if line segments intersect

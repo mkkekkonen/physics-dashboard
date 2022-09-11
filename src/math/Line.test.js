@@ -175,3 +175,183 @@ describe('calculateIntersection', () => {
       .toEqual(intersectionPoint.testableObj());
   });
 });
+
+describe('calculateSegmentIntersection', () => {
+  describe('intersection', () => {
+    test('basic intersection', () => {
+      const line1 = new Line({
+        point1: new Vector2({ x: -1, y: 0 }),
+        point2: new Vector2({ x: 0, y: -1 }),
+      });
+
+      const line2 = new Line({
+        point1: new Vector2({ x: -1, y: -1 }),
+        point2: new Vector2({ x: 0, y: 0 }),
+      });
+
+      const intersectionPoint = new Vector2({ x: -0.5, y: -0.5 }).testableObj();
+
+      expect(line1.calculateSegmentIntersection(line2).testableObj())
+        .toEqual(intersectionPoint);
+      expect(line2.calculateSegmentIntersection(line1).testableObj())
+        .toEqual(intersectionPoint);
+    });
+
+    test('equal lines', () => {
+      const line1 = new Line({
+        point1: new Vector2({ x: -1, y: -1 }),
+        point2: new Vector2({ x: 2, y: 2 }),
+      });
+
+      const line2 = new Line({
+        point1: new Vector2({ x: 0, y: 0 }),
+        point2: new Vector2({ x: 3, y: 3 }),
+      });
+
+      expect(line1.calculateSegmentIntersection(line2))
+        .toBe(true);
+      expect(line2.calculateSegmentIntersection(line1))
+        .toBe(true);
+    });
+
+    test('equal vertical lines', () => {
+      const line1 = new Line({
+        point1: new Vector2({ x: 1, y: 2 }),
+        point2: new Vector2({ x: 1, y: -1 }),
+      });
+
+      const line2 = new Line({
+        point1: new Vector2({ x: 1, y: 1 }),
+        point2: new Vector2({ x: 1, y: -2 }),
+      });
+
+      expect(line1.calculateSegmentIntersection(line2))
+        .toBe(true);
+      expect(line2.calculateSegmentIntersection(line1))
+        .toBe(true);
+    });
+
+    test('other line vertical', () => {
+      const line1 = new Line({
+        point1: new Vector2({ x: 1, y: 0 }),
+        point2: new Vector2({ x: 1, y: 2 }),
+      });
+
+      const line2 = new Line({
+        point1: new Vector2({ x: -1, y: -1 }),
+        point2: new Vector2({ x: 2, y: 2 }),
+      });
+
+      const intersectionPoint = new Vector2({ x: 1, y: 1 }).testableObj();
+
+      expect(line1.calculateSegmentIntersection(line2).testableObj())
+        .toEqual(intersectionPoint);
+      expect(line2.calculateSegmentIntersection(line1).testableObj())
+        .toEqual(intersectionPoint);
+    });
+  });
+
+  describe('no intersection', () => {
+    test('basic lines', () => {
+      const line1 = new Line({
+        point1: new Vector2({ x: -1, y: 0 }),
+        point2: new Vector2({ x: 0, y: -1 }),
+      });
+
+      const line2 = new Line({
+        point1: new Vector2({ x: -2, y: -2 }),
+        point2: new Vector2({ x: -1, y: -1 }),
+      });
+
+      expect(line1.calculateSegmentIntersection(line2))
+        .toBe(false);
+      expect(line2.calculateSegmentIntersection(line1))
+        .toBe(false);
+    });
+
+    test('equal lines', () => {
+      const line1 = new Line({
+        point1: new Vector2({ x: -1, y: 2 }),
+        point2: new Vector2({ x: 0, y: 1 }),
+      });
+
+      const line2 = new Line({
+        point1: new Vector2({ x: 1, y: 0 }),
+        point2: new Vector2({ x: 2, y: -1 }),
+      });
+
+      expect(line1.calculateSegmentIntersection(line2))
+        .toBe(false);
+      expect(line2.calculateSegmentIntersection(line1))
+        .toBe(false);
+    });
+
+    test('parallel lines', () => {
+      const line1 = new Line({
+        point1: new Vector2({ x: -1, y: 2 }),
+        point2: new Vector2({ x: 0, y: 1 }),
+      });
+
+      const line2 = new Line({
+        point1: new Vector2({ x: -2, y: 1 }),
+        point2: new Vector2({ x: 0, y: -1 }),
+      });
+
+      expect(line1.calculateSegmentIntersection(line2))
+        .toBe(false);
+      expect(line2.calculateSegmentIntersection(line1))
+        .toBe(false);
+    });
+
+    test('equal vertical lines', () => {
+      const line1 = new Line({
+        point1: new Vector2({ x: 0, y: 3 }),
+        point2: new Vector2({ x: 0, y: 2 }),
+      });
+
+      const line2 = new Line({
+        point1: new Vector2({ x: 0, y: 1 }),
+        point2: new Vector2({ x: 0, y: 0 }),
+      });
+
+      expect(line1.calculateSegmentIntersection(line2))
+        .toBe(false);
+      expect(line2.calculateSegmentIntersection(line1))
+        .toBe(false);
+    });
+
+    test('parallel vertical lines', () => {
+      const line1 = new Line({
+        point1: new Vector2({ x: -1, y: 0 }),
+        point2: new Vector2({ x: -1, y: 1 }),
+      });
+
+      const line2 = new Line({
+        point1: new Vector2({ x: 1, y: 1 }),
+        point2: new Vector2({ x: 1, y: 3 }),
+      });
+
+      expect(line1.calculateSegmentIntersection(line2))
+        .toBe(false);
+      expect(line2.calculateSegmentIntersection(line1))
+        .toBe(false);
+    });
+
+    test('other line vertical', () => {
+      const line1 = new Line({
+        point1: new Vector2({ x: 0, y: -1 }),
+        point2: new Vector2({ x: 1, y: -2 }),
+      });
+
+      const line2 = new Line({
+        point1: new Vector2({ x: 1, y: -1 }),
+        point2: new Vector2({ x: 1, y: 1 }),
+      });
+
+      expect(line1.calculateSegmentIntersection(line2))
+        .toBe(false);
+      expect(line2.calculateSegmentIntersection(line1))
+        .toBe(false);
+    });
+  });
+});
