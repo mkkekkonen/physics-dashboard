@@ -5,13 +5,9 @@ import { Vector2 } from './Vector2';
 import { Line } from './Line';
 
 export class Polygon {
-  constructor({ points, radius, json }) {
-    if (json) {
-      Object.assign(this, json);
-    } else if (points) {
-      this.points = points;
-      this.radius = radius;
-    }
+  constructor({ points, radius }) {
+    this.points = points;
+    this.radius = radius;
   }
 
   getKonvaPoints = () => {
@@ -29,7 +25,7 @@ export class Polygon {
           ? (i + 1)
           : 0;
 
-        return new Line(point, this.points[nextIndex]);
+        return new Line({ point1: point, point2: this.points[nextIndex] });
       }),
     );
   };
@@ -59,9 +55,5 @@ export class Polygon {
     }
 
     return new Polygon({ points, radius });
-  };
-
-  static parseFromJson = (json) => {
-    return new Polygon({ json });
   };
 }

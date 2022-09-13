@@ -128,4 +128,11 @@ export class Line {
     // the lines intersect but line segments do not
     return false;
   };
+
+  testableObj = () => {
+    return {
+      point1: this.point1.testableObj(),
+      point2: this.point2.testableObj(),
+    };
+  };
 }
