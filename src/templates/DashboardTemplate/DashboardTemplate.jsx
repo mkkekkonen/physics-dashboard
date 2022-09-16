@@ -6,6 +6,10 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
+const StyledContainer = styled(Container)`
+  font-family: monospace;
+`;
+
 const ContentContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -24,13 +28,11 @@ const TopContainer = styled.div`
 
 const DefaultSimulationView = styled.div`
   color: #fff;
-  font-family: monospace;
 `;
 
 const DefaultContentView = styled.div`  
   background-color: #ddd;
   color: #222;
-  font-family: monospace;
   width: 800px;
   
   @media only screen and (max-width: 800px) {
@@ -38,35 +40,51 @@ const DefaultContentView = styled.div`
   }
 `;
 
+const DefaultSimulationViewComponent = ({ ...props }) => {
+  return (
+    <DefaultSimulationView>Simulaatio</DefaultSimulationView>
+  );
+};
+
+const DefaultContentViewComponent = ({ ...props }) => {
+  return (
+    <DefaultContentView>Sisältö</DefaultContentView>
+  );
+};
+
 export const DashboardTemplate = ({
-  simulationView,
-  contentView,
+  SimulationView,
+  ContentView,
   ...props
 }) => {
   return (
-    <Container>
+    <StyledContainer>
       <Row>
         <Col>
           <ContentContainer>
-            <TopContainer>{simulationView}</TopContainer>
+            <TopContainer>
+              <SimulationView />
+            </TopContainer>
           </ContentContainer>
         </Col>
       </Row>
       <Row>
         <Col>
-          <ContentContainer>{contentView}</ContentContainer>
+          <ContentContainer>
+            <ContentView />
+          </ContentContainer>
         </Col>
       </Row>
-    </Container>
+    </StyledContainer>
   );
 };
 
 DashboardTemplate.defaultProps = {
-  simulationView: <DefaultSimulationView>Simulaatio</DefaultSimulationView>,
-  contentView: <DefaultContentView>Sisältö</DefaultContentView>,
+  SimulationView: DefaultSimulationViewComponent,
+  ContentView: DefaultContentViewComponent,
 };
 
 DashboardTemplate.propTypes = {
-  simulationView: PropTypes.node,
-  contentView: PropTypes.node,
+  SimulationView: PropTypes.elementType,
+  ContentView: PropTypes.elementType,
 };
