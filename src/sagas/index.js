@@ -83,8 +83,9 @@ export function* updatePolygons(action) {
 
   for (let i = 0; i < polygons.size; i += 1) {
     const polygon = polygons.get(i);
+    const velocity = polygon.get('velocity');
 
-    const positionDelta = polygon.get('velocity').multiplyScalar(deltaSeconds);
+    const positionDelta = velocity.multiplyScalar(deltaSeconds);
     const newPosition = polygon.get('position').addVector(positionDelta);
     polygons = polygons.setIn([i, 'position'], newPosition);
 
@@ -94,23 +95,23 @@ export function* updatePolygons(action) {
 
     const mathPolygon = polygon.get('polygon');
     mathPolygon.rotate(rotationDelta);
-    const polyLines = mathPolygon.getLines();
+    const polyLines = mathPolygon.getLines(newPosition);
 
     const hitTopLine = polyLines.some((line) => {
       return line.calculateSegmentIntersection(stageBorderingLines.get('topLine'));
-    }) && polygon.get('velocity').y > 0;
+    }) && velocity.y < 0;
 
     const hitRightLine = polyLines.some((line) => {
       return line.calculateSegmentIntersection(stageBorderingLines.get('rightLine'));
-    }) && polygon.get('velocity').x > 0;
+    }) && velocity.x > 0;
 
     const hitBottomLine = polyLines.some((line) => {
       return line.calculateSegmentIntersection(stageBorderingLines.get('bottomLine'));
-    }) && polygon.get('velocity').y < 0;
+    }) && velocity.y > 0;
 
     const hitLeftLine = polyLines.some((line) => {
       return line.calculateSegmentIntersection(stageBorderingLines.get('leftLine'));
-    }) && polygon.get('velocity').x < 0;
+    }) && velocity.x < 0;
 
     if (hitTopLine || hitBottomLine) {
       const multiplier = new Vector2({ x: 1, y: -1 }); // invert Y component
@@ -123,22 +124,6 @@ export function* updatePolygons(action) {
       const newVelocity = polygon.get('velocity').multiplyVector(multiplier);
       polygons = polygons.setIn([i, 'velocity'], newVelocity);
     }
-
-    // if (invertedPosition.x < MIN_POSITION_X
-    //   || (MAX_POSITION_X && invertedPosition.x > MAX_POSITION_X)
-    // ) {
-    //   const multiplier = new Vector2({ x: -1, y: 1 }); // invert X component
-    //   const newVelocity = polygon.get('velocity').multiplyVector(multiplier);
-    //   polygons = polygons.setIn([i, 'velocity'], newVelocity);
-    // }
-
-    // if (invertedPosition.y < MIN_POSITION_Y
-    //   || (MAX_POSITION_Y && invertedPosition.y > MAX_POSITION_Y)
-    // ) {
-    //   const multiplier = new Vector2({ x: 1, y: -1 }); // invert Y component
-    //   const newVelocity = polygon.get('velocity').multiplyVector(multiplier);
-    //   polygons = polygons.setIn([i, 'velocity'], newVelocity);
-    // }
   }
 
   yield put(savePolygons(polygons));

@@ -18,14 +18,22 @@ export class Polygon {
       .flat();
   };
 
-  getLines = () => {
+  getLines = (position = null) => {
     return Immutable.fromJS(
       this.points.map((point, i) => {
         const nextIndex = i < (this.points.length - 1)
           ? (i + 1)
           : 0;
 
-        return new Line({ point1: point, point2: this.points[nextIndex] });
+        let point1 = point;
+        let point2 = this.points[nextIndex];
+
+        if (position) {
+          point1 = point1.addVector(position);
+          point2 = point2.addVector(position);
+        }
+
+        return new Line({ point1, point2 });
       }),
     );
   };
