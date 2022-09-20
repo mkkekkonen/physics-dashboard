@@ -6,6 +6,8 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
+import * as uiConstants from '../constants/uiConstants';
+
 const StyledContainer = styled(Container)`
   font-family: monospace;
 `;
@@ -16,7 +18,7 @@ const ContentContainer = styled.div`
 `;
 
 const TopContainer = styled.div`
-  background-color: #339;
+  background-color: ${uiConstants.darkBlue};
   width: 600px;
   height: 600px;
 
