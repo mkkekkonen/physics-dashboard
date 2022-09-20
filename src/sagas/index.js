@@ -27,6 +27,8 @@ let MAX_POSITION_X;
 const MIN_POSITION_Y = 100;
 let MAX_POSITION_Y;
 
+let loop = 0;
+
 const getPolygonInitialState = (id, position) => {
   const polygon = generateRandomPolygon();
 
@@ -34,6 +36,7 @@ const getPolygonInitialState = (id, position) => {
     id,
     polygon,
     radius: polygon.radius,
+    mass: mathUtils.randRangeInt(5, 20), // kg
     position,
     rotation: 0,
     velocity: generateRandomVector(75, 150), // magnitude: speed per second
@@ -81,7 +84,11 @@ export function* updatePolygons(action) {
   const stageBounds = yield select(getStageBounds);
   const stageBorderingLines = yield select(getStageBorderingLines);
 
+  const polyCollisionsChecked = [];
+
   for (let i = 0; i < polygons.size; i += 1) {
+    loop += 1;
+
     const polygon = polygons.get(i);
     const velocity = polygon.get('velocity');
 
@@ -113,18 +120,88 @@ export function* updatePolygons(action) {
       return line.calculateSegmentIntersection(stageBorderingLines.get('leftLine'));
     }) && velocity.x < 0;
 
+    for (let j = 0; j < polygons.size; j += 1) {
+      if (j === i) {
+        continue;
+      }
+
+      if (
+        polyCollisionsChecked.some((set) => {
+          return set.has(i) && set.has(j);
+        })
+      ) {
+        continue;
+      }
+
+      polyCollisionsChecked.push(new Set([i, j]));
+
+      let intersection;
+
+      for (let k = 0; k < polyLines.size; k += 1) {
+        const line = polyLines.get(k);
+        const otherPolygonLines = polygons.getIn([j, 'polygon'])
+          .getLines(polygons.getIn([j, 'position']));
+
+        for (let l = 0; l < otherPolygonLines.size; l += 1) {
+          const otherLine = otherPolygonLines.get(l);
+          const _intersection = line.calculateSegmentIntersection(otherLine);
+          if (_intersection) {
+            intersection = _intersection;
+            break;
+          }
+        }
+
+        if (intersection) {
+          break;
+        }
+      }
+
+      if (intersection) {
+        const currentPolygonMass = polygons.getIn([i, 'mass']);
+        const otherPolygonMass = polygons.getIn([j, 'mass']);
+        const currentPolygonInitialVelocity = polygons.getIn([i, 'velocity']);
+        const otherPolygonInitialVelocity = polygons.getIn([j, 'velocity']);
+
+        const multiplier1 = (
+          (currentPolygonMass - otherPolygonMass)
+          / (currentPolygonMass + otherPolygonMass)
+        );
+        const multiplier2 = (
+          (2 * otherPolygonMass)
+          / (currentPolygonMass + otherPolygonMass)
+        );
+
+        const currentPolygonNewVelocity = currentPolygonInitialVelocity.multiplyScalar(multiplier1)
+          .addVector(otherPolygonInitialVelocity.multiplyScalar(multiplier2));
+        const otherPolygonNewVelocity = currentPolygonInitialVelocity.multiplyScalar(multiplier2)
+          .addVector(otherPolygonInitialVelocity.multiplyScalar(multiplier1));
+
+        polygons = polygons.setIn([i, 'velocity'], currentPolygonNewVelocity);
+        polygons = polygons.setIn([j, 'velocity'], otherPolygonNewVelocity);
+      }
+    }
+
     if (hitTopLine || hitBottomLine) {
       const multiplier = new Vector2({ x: 1, y: -1 }); // invert Y component
-      const newVelocity = polygon.get('velocity').multiplyVector(multiplier);
+      const newVelocity = polygons.getIn([i, 'velocity']).multiplyVector(multiplier);
       polygons = polygons.setIn([i, 'velocity'], newVelocity);
     }
 
     if (hitRightLine || hitLeftLine) {
       const multiplier = new Vector2({ x: -1, y: 1 }); // invert X component
-      const newVelocity = polygon.get('velocity').multiplyVector(multiplier);
+      const newVelocity = polygons.getIn([i, 'velocity']).multiplyVector(multiplier);
       polygons = polygons.setIn([i, 'velocity'], newVelocity);
     }
   }
+
+  const debugStr = polygons.map((poly, i) => {
+    const res = [`POLY ${i}`];
+    res.push(JSON.stringify(poly.get('position').testableObj()));
+    return res.join('\n');
+  }).toJS().join('\n');
+
+  document.getElementById('debugView')
+    .innerText = debugStr;
 
   yield put(savePolygons(polygons));
 }

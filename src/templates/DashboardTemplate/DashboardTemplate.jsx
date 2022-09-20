@@ -75,6 +75,11 @@ export const DashboardTemplate = ({
           </ContentContainer>
         </Col>
       </Row>
+      <Row>
+        <Col>
+          <div id="debugView" />
+        </Col>
+      </Row>
     </StyledContainer>
   );
 };

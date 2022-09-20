@@ -22,6 +22,7 @@
         "arrow-body-style": ["error", "always"],
         "default-param-last": "off",
         "linebreak-style": ["error", "windows"],
+        "no-continue": "off",
         "no-underscore-dangle": "off",
         "no-shadow": "off",
         "import/prefer-default-export": "off",

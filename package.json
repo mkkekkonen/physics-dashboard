@@ -4,6 +4,7 @@
   "description": "A physics simulation",
   "main": "index.jsx",
   "scripts": {
+    "build": "webpack",
     "dev": "cross-env NODE_ENV=development webpack-dev-server",
     "test": "jest"
   },
