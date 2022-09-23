@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import propTypes, { oneOf } from 'prop-types';
+import propTypes from 'prop-types';
 
 import { ScalarDial } from './ScalarDial';
+import { CoordsDial } from './CoordsDial';
 
 import * as uiConstants from '../constants/uiConstants';
 
@@ -61,6 +62,9 @@ export const Dial = ({ label, value, type, unit, ...props }) => {
       <DialContainer>
         {type === DIAL_TYPES.SCALAR && (
           <ScalarDial value={value} />
+        )}
+        {type === DIAL_TYPES.COORDS && (
+          <CoordsDial coords={value} />
         )}
       </DialContainer>
       <DialUnit>{unit}</DialUnit>

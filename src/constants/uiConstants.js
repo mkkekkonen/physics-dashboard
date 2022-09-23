@@ -6,4 +6,5 @@ export const dialDimensions = '120px';
 
 export const DIAL_TYPES = {
   SCALAR: 'SCALAR',
+  COORDS: 'COORDS',
 };

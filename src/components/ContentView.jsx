@@ -29,12 +29,20 @@ export const ContentView = () => {
   return (
     <Wrapper>
       {firstPolygon && (
-        <Dial
-          label="Mass"
-          value={firstPolygon.get('mass')}
-          type={DIAL_TYPES.SCALAR}
-          unit="kg"
-        />
+        <>
+          <Dial
+            label="Mass"
+            value={firstPolygon.get('mass')}
+            type={DIAL_TYPES.SCALAR}
+            unit="kg"
+          />
+          <Dial
+            label="Position"
+            value={firstPolygon.get('position')}
+            type={DIAL_TYPES.COORDS}
+            unit="px"
+          />
+        </>
       )}
     </Wrapper>
   );
