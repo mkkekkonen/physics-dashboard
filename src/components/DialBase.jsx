@@ -1,6 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import * as uiConstants from '../constants/uiConstants';
+
+const dialBaseDimensions = `${uiConstants.dialBaseDimensionsPx}px`;
+
 export const DialBase = styled.span`
   border: 2px solid #fff;
   border-radius: 100%;
@@ -12,8 +16,8 @@ export const DialBase = styled.span`
   color: #fff;
   font-size: ${(props) => { return props.fontSize; }};
 
-  width: 95px;
-  height: 95px;
+  width: ${dialBaseDimensions};
+  height: ${dialBaseDimensions};
 `;
 
 DialBase.defaultProps = {

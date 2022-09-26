@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 
+import * as mathUtils from '../math/utils';
+
 import { getPolygonList } from '../selectors/polygons';
 
 import { DIAL_TYPES } from '../constants/uiConstants';
@@ -41,6 +43,12 @@ export const ContentView = () => {
             value={firstPolygon.get('position')}
             type={DIAL_TYPES.COORDS}
             unit="px"
+          />
+          <Dial
+            label="Rotation"
+            value={mathUtils.radiansToDegrees(firstPolygon.get('rotation')) % 360}
+            type={DIAL_TYPES.ANGLE}
+            unit="deg"
           />
         </>
       )}

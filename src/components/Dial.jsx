@@ -4,6 +4,7 @@ import propTypes from 'prop-types';
 
 import { ScalarDial } from './ScalarDial';
 import { CoordsDial } from './CoordsDial';
+import { AngleDial } from './AngleDial';
 
 import * as uiConstants from '../constants/uiConstants';
 
@@ -55,7 +56,13 @@ const DialUnit = styled(DialPanel)`
   border-bottom-right-radius: ${uiConstants.borderRadius};
 `;
 
-export const Dial = ({ label, value, type, unit, ...props }) => {
+export const Dial = ({
+  label,
+  value,
+  type,
+  unit,
+  ...props
+}) => {
   return (
     <DialLayout>
       <DialHeader>{label}</DialHeader>
@@ -65,6 +72,9 @@ export const Dial = ({ label, value, type, unit, ...props }) => {
         )}
         {type === DIAL_TYPES.COORDS && (
           <CoordsDial coords={value} />
+        )}
+        {type === DIAL_TYPES.ANGLE && (
+          <AngleDial angle={value} />
         )}
       </DialContainer>
       <DialUnit>{unit}</DialUnit>
