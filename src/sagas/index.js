@@ -204,7 +204,8 @@ export function* updatePolygons(action) {
 
   const debugStr = polygons.map((poly, i) => {
     const res = [`POLY ${i}`];
-    res.push(JSON.stringify(poly.get('position').testableObj()));
+    res.push(`position: ${JSON.stringify(poly.get('position').testableObj())}`);
+    res.push(`velocity: ${JSON.stringify(poly.get('velocity').testableObj())}`);
     return res.join('\n');
   }).toJS().join('\n');
 

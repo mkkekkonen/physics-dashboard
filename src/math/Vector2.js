@@ -6,6 +6,24 @@ export class Vector2 {
     this.y = y;
   }
 
+  get magnitude() {
+    return Math.sqrt((this.x ** 2) + (this.y ** 2));
+  }
+
+  get polarCoords() {
+    if (!this.x) {
+      return {
+        angle: 0,
+        radius: 0,
+      };
+    }
+
+    return {
+      angle: Math.atan(this.y / this.x),
+      radius: this.magnitude,
+    };
+  }
+
   addVector = (vector) => {
     return new Vector2({
       x: this.x + vector.x,
@@ -24,6 +42,13 @@ export class Vector2 {
     return new Vector2({
       x: this.x * vector.x,
       y: this.y * vector.y,
+    });
+  };
+
+  divideScalar = (scalar) => {
+    return new Vector2({
+      x: this.x / scalar,
+      y: this.y / scalar,
     });
   };
 

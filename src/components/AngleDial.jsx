@@ -41,7 +41,7 @@ export const AngleDial = ({ angle, ...props }) => {
             outerRadius={dimHalved}
             angle={_angle}
             rotationDeg={-90}
-            fill="#77d"
+            fill={uiConstants.lightBlue}
           />
           <Text
             ref={text}

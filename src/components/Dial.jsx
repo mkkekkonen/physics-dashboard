@@ -5,6 +5,7 @@ import propTypes from 'prop-types';
 import { ScalarDial } from './ScalarDial';
 import { CoordsDial } from './CoordsDial';
 import { AngleDial } from './AngleDial';
+import { VectorDial } from './VectorDial';
 
 import * as uiConstants from '../constants/uiConstants';
 
@@ -75,6 +76,9 @@ export const Dial = ({
         )}
         {type === DIAL_TYPES.ANGLE && (
           <AngleDial angle={value} />
+        )}
+        {type === DIAL_TYPES.VECTOR && (
+          <VectorDial vector={value} />
         )}
       </DialContainer>
       <DialUnit>{unit}</DialUnit>
