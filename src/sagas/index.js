@@ -170,11 +170,19 @@ export function* updatePolygons(action) {
           (2 * otherPolygonMass)
           / (currentPolygonMass + otherPolygonMass)
         );
+        const multiplier3 = (
+          (2 * currentPolygonMass)
+          / (currentPolygonMass + otherPolygonMass)
+        );
+        const multiplier4 = (
+          (otherPolygonMass - currentPolygonMass)
+          / (currentPolygonMass + otherPolygonMass)
+        );
 
         const currentPolygonNewVelocity = currentPolygonInitialVelocity.multiplyScalar(multiplier1)
           .addVector(otherPolygonInitialVelocity.multiplyScalar(multiplier2));
-        const otherPolygonNewVelocity = currentPolygonInitialVelocity.multiplyScalar(multiplier2)
-          .addVector(otherPolygonInitialVelocity.multiplyScalar(multiplier1));
+        const otherPolygonNewVelocity = currentPolygonInitialVelocity.multiplyScalar(multiplier3)
+          .addVector(otherPolygonInitialVelocity.multiplyScalar(multiplier4));
 
         polygons = polygons.setIn([i, 'velocity'], currentPolygonNewVelocity);
         polygons = polygons.setIn([j, 'velocity'], otherPolygonNewVelocity);
