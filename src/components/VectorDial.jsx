@@ -16,6 +16,7 @@ import * as uiConstants from '../constants/uiConstants';
 import { DialBase } from './DialBase';
 
 const maxVectorLength = uiConstants.dialBaseDimensionsPx / 2;
+const dimHalved = uiConstants.dialBaseDimensionsPx / 2;
 
 export class VectorDial extends React.Component {
   constructor(props) {
@@ -47,7 +48,6 @@ export class VectorDial extends React.Component {
     const { vector } = this.props;
     const { range, lengthDivider } = this.state;
 
-    const dimHalved = uiConstants.dialBaseDimensionsPx / 2;
     const scaledVector = vector.divideScalar(lengthDivider);
 
     return (

@@ -206,6 +206,7 @@ export function* updatePolygons(action) {
     const res = [`POLY ${i}`];
     res.push(`position: ${JSON.stringify(poly.get('position').testableObj())}`);
     res.push(`velocity: ${JSON.stringify(poly.get('velocity').testableObj())}`);
+    res.push(`angular velocity: ${mathUtils.radiansToDegrees(poly.get('angularVelocity'))}`);
     return res.join('\n');
   }).toJS().join('\n');
 

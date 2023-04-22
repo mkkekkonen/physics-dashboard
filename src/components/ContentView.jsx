@@ -56,6 +56,13 @@ export const ContentView = () => {
             type={DIAL_TYPES.VECTOR}
             unit="px/s"
           />
+          <Dial
+            label="Angular velocity"
+            value={mathUtils.radiansToDegrees(firstPolygon.get('angularVelocity'))}
+            type={DIAL_TYPES.SCALAR2}
+            unit="deg/s"
+            negative
+          />
         </>
       )}
     </Wrapper>

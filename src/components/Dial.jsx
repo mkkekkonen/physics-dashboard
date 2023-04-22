@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import propTypes from 'prop-types';
 
 import { ScalarDial } from './ScalarDial';
+import { ScalarDial2 } from './ScalarDial2';
 import { CoordsDial } from './CoordsDial';
 import { AngleDial } from './AngleDial';
 import { VectorDial } from './VectorDial';
@@ -48,8 +49,8 @@ const DialContainer = styled.div`
   align-items: center;
   justify-content: center;
 
-  width: ${uiConstants.dialDimensions};
-  height: ${uiConstants.dialDimensions};
+  width: ${uiConstants.dialDimensions + 20}px;
+  height: ${uiConstants.dialDimensions}px;
 `;
 
 const DialUnit = styled(DialPanel)`
@@ -60,6 +61,7 @@ const DialUnit = styled(DialPanel)`
 export const Dial = ({
   label,
   value,
+  negative,
   type,
   unit,
   ...props
@@ -70,6 +72,12 @@ export const Dial = ({
       <DialContainer>
         {type === DIAL_TYPES.SCALAR && (
           <ScalarDial value={value} />
+        )}
+        {type === DIAL_TYPES.SCALAR2 && (
+          <ScalarDial2
+            value={value}
+            negative={negative}
+          />
         )}
         {type === DIAL_TYPES.COORDS && (
           <CoordsDial coords={value} />
@@ -91,6 +99,7 @@ Dial.propTypes = {
   value: propTypes.oneOfType([
     propTypes.number,
   ]),
+  negative: propTypes.bool,
   type: propTypes.oneOf([
     DIAL_TYPES.SCALAR,
   ]).isRequired,
@@ -100,5 +109,6 @@ Dial.propTypes = {
 Dial.defaultProps = {
   label: '-',
   value: 0,
+  negative: false,
   unit: '?',
 };
